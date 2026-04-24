@@ -324,8 +324,8 @@ impl VnProcess {
                 p.cpu_usage.clone()
             };
 
-            lines.push(format!("{:<8} | {:<25} | {:<8} | {:<10} | {:<10}", 
-                p.pid, short_name, cpu_str, p.memory_usage, p.status));
+            lines.push(format!("{:<8} | {:<8} | {:<25} | {:<8} | {:<10} | {:<10} | {:<8}", 
+                p.pid, p.uid, short_name, cpu_str, p.memory_usage, p.status, p.start_time));
         }
 
         lines.join("\n")
