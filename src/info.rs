@@ -1,5 +1,41 @@
 use sysinfo::{System, Disks, Networks};
 
+fn format_bytes(bytes: u64) -> String {
+    let bytes_f = bytes as f64;
+    let kb = 1024.0;
+    let mb = kb * 1024.0;
+    let gb = mb * 1024.0;
+
+    if bytes_f >= gb {
+        format!("{:.2} GB", bytes_f / gb)
+    } else if bytes_f >= mb {
+        format!("{:.2} MB", bytes_f / mb)
+    } else if bytes_f >= kb {
+        format!("{:.2} KB", bytes_f / kb)
+    } else {
+        format!("{} B", bytes)
+    }
+}
+
+fn format_time(seconds: u64) -> String {
+    if seconds == 0 { return "None".to_string(); }
+
+    let days = seconds / 86400;
+    let hours = (seconds % 86400) / 3600;
+    let minutes = (seconds % 3600) / 60;
+    let seconds_rem = seconds % 60;
+
+    if days != 0 {
+        format!("{}d, {}h, {}m, {}s", days, hours, minutes, seconds_rem)
+    } else if hours != 0 {
+        format!("{}h, {}m, {}s", hours, minutes, seconds_rem)
+    } else if minutes != 0 {
+        format!("{}m, {}s", minutes, seconds_rem)
+    } else {
+        format!("{}s", seconds_rem)
+    }
+}
+
 // System informations.
 pub struct VnSystem {
     name: String,
@@ -18,8 +54,8 @@ impl VnSystem {
         VnSystem { 
             name: System::name().unwrap_or_default(),
             host: System::host_name().unwrap_or_default(),
-            boot: System::boot_time().to_string(),
-            uptime: System::uptime().to_string(),
+            boot: format_time(System::boot_time()),
+            uptime: format_time(System::uptime()),
             arch: System::cpu_arch(),
             os: System::os_version().unwrap_or_default(),
             long_os: System::long_os_version().unwrap_or_default(),
@@ -63,7 +99,7 @@ impl VnCpu {
         for cpu in sys.cpus() {
             let info = VnCpuCore {
                 name: cpu.name().to_string(),
-                usage: cpu.cpu_usage().to_string(),
+                usage: format!("%{:.1}", cpu.cpu_usage()),
                 freq: cpu.frequency().to_string(),
             };
             cpu_core.push(info);
@@ -120,13 +156,20 @@ pub struct VnMemory {
 
 impl VnMemory {
     pub fn new(sys: &System) -> VnMemory {
+        let total_mem = format_bytes(sys.total_memory());
+        let available_mem = format_bytes(sys.available_memory());
+        let used = format_bytes(sys.used_memory());
+        let free = format_bytes(sys.free_memory());
+        let total_swap = format_bytes(sys.total_swap());
+        let used_swap = format_bytes(sys.used_swap());
+
         VnMemory { 
-            total: sys.total_memory().to_string(), 
-            available: sys.available_memory().to_string(), 
-            used: sys.used_memory().to_string(), 
-            free: sys.free_memory().to_string(), 
-            total_swap: sys.total_swap().to_string(), 
-            used_swap: sys.used_swap().to_string(), 
+            total: total_mem, 
+            available: available_mem, 
+            used: used, 
+            free: free, 
+            total_swap: total_swap, 
+            used_swap: used_swap, 
         }
     }
 
@@ -167,8 +210,8 @@ impl VnDisk {
                 mount: d.mount_point().to_str().unwrap_or("Unknown Mount").to_string(),
                 kind: d.kind().to_string(),
                 file_type: d.file_system().to_str().unwrap_or("Unknown File System").to_string(),
-                total_space: d.total_space().to_string(),
-                available_space: d.available_space().to_string(),
+                total_space: format_bytes(d.total_space()),
+                available_space: format_bytes(d.available_space()),
             };
             disk_info.push(info);
         }
@@ -222,10 +265,10 @@ impl VnNetwork {
             let info = VnNetworkInfo {
                 name: n.0.to_string(),
                 mac: n.1.mac_address().to_string(),
-                received: n.1.received().to_string(),
-                transmitted: n.1.transmitted().to_string(),
-                total_received: n.1.total_received().to_string(),
-                total_transmitted: n.1.total_transmitted().to_string(),
+                received: format_bytes(n.1.received()),
+                transmitted: format_bytes(n.1.transmitted()),
+                total_received: format_bytes(n.1.total_received()),
+                total_transmitted: format_bytes(n.1.total_transmitted()),
             };
             network_info.push(info);
         }
@@ -283,9 +326,9 @@ impl VnProcess {
                     .map(|u| u.to_string())
                     .unwrap_or_else(|| "N/A".to_string()),
                 pid: pid.as_u32().to_string(),
-                cpu_usage: process.cpu_usage().to_string(),
-                memory_usage: process.memory().to_string(),
-                start_time: process.start_time().to_string(),
+                cpu_usage: format!("%{}", process.cpu_usage()),
+                memory_usage: format_bytes(process.memory()),
+                start_time: format_time(process.start_time()),
                 status: process.status().to_string(),
             };
             process_info.push(info)

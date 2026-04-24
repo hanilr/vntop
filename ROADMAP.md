@@ -6,7 +6,7 @@ This project is in early development. This roadmap contains features, bugs (if f
 ### User Interactions and Core Features
 
 - [ ] Live loop: *Refresh event.*
-- [ ] Used and Available Sizes as KB: *For now this values used as bytes. Should be in kb.*
+- [X] Used and Available Sizes as KB: *For now this values used as bytes. Should be in kb.*
 - [ ] Keybinds: *User actions.*
 - [ ] Terminal Resize: *When terminal resized update visuals.*
 - [ ] Visual Indicators: *Usage percentage bars etc.*
