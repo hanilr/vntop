@@ -22,8 +22,8 @@ fn main() {
     let mut sys = System::new_all();
     sys.refresh_all();
 
-    let mut dsk = Disks::new_with_refreshed_list();
-    let mut ntw = Networks::new_with_refreshed_list();
+    let dsk = Disks::new_with_refreshed_list();
+    let ntw = Networks::new_with_refreshed_list();
 
     let mut content_info: Vec<Vec<String>> = vec![];
     content_info.push(Parser::new(&VnSystem::new().raw_info()).cook());
