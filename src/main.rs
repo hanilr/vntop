@@ -1,3 +1,6 @@
+use std::time::Duration;
+use std::thread;
+
 use vntop::info::*;
 use vntop::conf::*;
 use vntop::ui::*;
@@ -11,6 +14,8 @@ fn main() {
 
     // Get terminal preferences and draw main frame.
     let terminal = UI::new_with_terminal_size();
+    terminal.clean_terminal();
+
     let win = Parser::new(&Conf::new("window_frame", "txt", "").get()).cook();
     let window = Frame::new(&win[0], &win[1], &win[2], &win[3], 
         &win[4], &win[5], &win[6], &win[7], &win[8], &win[9], 
@@ -37,4 +42,5 @@ fn main() {
 
     // Goes end of terminal for better view.
     terminal.goto_terminal_end();
+    thread::sleep(Duration::from_secs(1));
 }
