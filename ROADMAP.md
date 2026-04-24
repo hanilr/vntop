@@ -10,6 +10,7 @@ This project is in early development. This roadmap contains features, bugs (if f
 - [ ] Keybinds: *User actions.*
 - [ ] Terminal Resize: *When terminal resized update visuals.*
 - [ ] Visual Indicators: *Usage percentage bars etc.*
+- [ ] Use `ratatui` for UI: In long term ui should be change to ratatui.
 
 ---
 
