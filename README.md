@@ -8,13 +8,17 @@ Modern tools like `btop` and `htop` uses unix's `top` tool, which means `table o
 ## Installation and Run
 > You need only rust and git tools to run.
 
+If you want to build from the source and run.
 ```bash
 git clone https://github.com/hanilr/vntop.git
 cd vntop
 cargo run
 ```
 
-> You can benchmark this project with: `cargo bench`
+If you want to install this program to you system.
+```bash
+cargo install vntop
+```
 
 ---
 
