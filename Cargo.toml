@@ -1,0 +1,16 @@
+[package]
+name = "vntop"
+version = "0.1.0"
+edition = "2024"
+authors = ["Hakkı Anıl Ragıboğlu <hakkianilragiboglu@gmail.com>"]
+description = "Table of Processes tool written in Rust."
+license = "MIT"
+repository = "https://github.com/hanilr/vntop"
+readme = "README.md"
+keywords = ["tui", "system-monitor", "cli", "linux"]
+categories = ["command-line-utilities"]
+
+[dependencies]
+colored = "3.1.1"
+sysinfo = "0.38.4"
+terminal_size = "0.4.4"
