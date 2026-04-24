@@ -17,6 +17,15 @@ macro_rules! gotoxy {
     };
 }
 
+// Ascii escape sequence terminal clean.
+macro_rules! clean {
+    () => {
+        print!("\x1B[2J\x1B[1;1H");
+        use std::io::Write;
+        std::io::stdout().flush().unwrap();
+    };
+}
+
 // UI base structure.
 #[derive(Clone)]
 pub struct UI {
@@ -56,6 +65,10 @@ impl UI {
 
     pub fn goto_terminal_end(&self) {
         gotoxy!(self.height, 0);
+    }
+
+    pub fn clean_terminal(&self) {
+        clean!();
     }
 }
 
