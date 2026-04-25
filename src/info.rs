@@ -113,7 +113,7 @@ impl VnCpu {
             vendor: sys.cpus()[0].vendor_id().to_string(), 
             logical: sys.cpus().len().to_string(), 
             physical: System::physical_core_count().unwrap_or(0).to_string(), 
-            total_usage: sys.global_cpu_usage().to_string(), 
+            total_usage: format!("%{:.2}", sys.global_cpu_usage()), 
             core: cpu_core,
         }
     }
@@ -159,20 +159,13 @@ pub struct VnMemory {
 
 impl VnMemory {
     pub fn new(sys: &System) -> VnMemory {
-        let total_mem = format_bytes(sys.total_memory());
-        let available_mem = format_bytes(sys.available_memory());
-        let used = format_bytes(sys.used_memory());
-        let free = format_bytes(sys.free_memory());
-        let total_swap = format_bytes(sys.total_swap());
-        let used_swap = format_bytes(sys.used_swap());
-
         VnMemory { 
-            total: total_mem, 
-            available: available_mem, 
-            used: used, 
-            free: free, 
-            total_swap: total_swap, 
-            used_swap: used_swap, 
+            total: format_bytes(sys.total_memory()), 
+            available: format_bytes(sys.available_memory()), 
+            used: format_bytes(sys.used_memory()), 
+            free: format_bytes(sys.free_memory()), 
+            total_swap: format_bytes(sys.total_swap()), 
+            used_swap: format_bytes(sys.used_swap()), 
         }
     }
 
@@ -303,15 +296,17 @@ impl VnNetwork {
 }
 
 // Contains a process informations.
+#[derive(Clone)]
 struct VnProcessInfo {
     name: String,
     pid: String,
     cpu_usage: String,
-    memory_usage: String,
+    memory_usage: u64,
     status: String,
 }
 
 // Contains every processes informations.
+#[derive(Clone)]
 pub struct VnProcess {
     process_info: Vec<VnProcessInfo>,
 }
@@ -324,8 +319,8 @@ impl VnProcess {
             let info = VnProcessInfo {
                 name: process.name().to_str().unwrap_or("Unknown Name").to_string(),
                 pid: pid.as_u32().to_string(),
-                cpu_usage: format!("%{}", process.cpu_usage()),
-                memory_usage: format_bytes(process.memory()),
+                cpu_usage: format!("{}", process.cpu_usage()),
+                memory_usage: process.memory(),
                 status: process.status().to_string(),
             };
             process_info.push(info)
@@ -341,17 +336,30 @@ impl VnProcess {
         *self = new;
     }
 
-    pub fn raw_info(&self) -> String {
+    pub fn raw_info(&self, sort_cpu: bool) -> String {
         if self.process_info.is_empty() {
             return "N/A".to_string();
         }
+        let mut sorted_procs = self.process_info.clone();
+
+        sorted_procs.sort_by(|a, b| {
+        if sort_cpu {
+            let a_val = a.cpu_usage.parse::<f32>().unwrap_or(0.0);
+            let b_val = b.cpu_usage.parse::<f32>().unwrap_or(0.0);
+            b_val.partial_cmp(&a_val).unwrap_or(std::cmp::Ordering::Equal)
+        } else {
+            let a_val = a.memory_usage;
+            let b_val = b.memory_usage;
+            b_val.partial_cmp(&a_val).unwrap_or(std::cmp::Ordering::Equal)
+        }
+});
 
         let mut lines = vec![
-            format!("{:<8} | {:<25} | {:<8} | {:<10} | {:<10}", "PID", "Name", "CPU %", "Memory (B)", "Status"),
-            "-".repeat(73)
+            format!("{:<8} │ {:<25} │ {:<8} │ {:<10} │ {:<10}", "PID", "Name", "CPU %", "Memory", "Status"),
+            "─".repeat(73)
         ];
 
-        for p in self.process_info.iter().take(100) {
+        for p in sorted_procs.iter().take(100) {
             let short_name = if p.name.chars().count() > 25 {
                 format!("{}...", p.name.chars().take(22).collect::<String>())
             } else {
@@ -364,8 +372,8 @@ impl VnProcess {
                 p.cpu_usage.clone()
             };
 
-            lines.push(format!("{:<8} | {:<25} | {:<8} | {:<10} | {:<10}", 
-                p.pid, short_name, cpu_str, p.memory_usage, p.status));
+            lines.push(format!("{:<8} │ {:<25} │ %{:<8} │ {:<10} │ {:<10}", 
+                p.pid, short_name, cpu_str, format_bytes(p.memory_usage), p.status));
         }
 
         lines.join("\n")

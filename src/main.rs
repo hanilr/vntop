@@ -23,6 +23,9 @@ fn main() {
         let mut dsk = Disks::new_with_refreshed_list();
         let mut ntw = Networks::new_with_refreshed_list();
 
+        // Process sorting variable.
+        let mut sort_cpu = true;
+
         // Get terminal preferences and draw main frame.
         let (width, height) = terminal::size().unwrap_or((80, 24));
         let mut terminal = UI::new(width as u8, height as u8, 0, 0);
@@ -39,6 +42,18 @@ fn main() {
             if event::poll(Duration::from_millis(100)).unwrap() {
                 if let Event::Key(key) = event::read().unwrap() {
                     if key.code == KeyCode::Char('q') { break; }
+                }
+            }
+
+            if event::poll(Duration::from_millis(100)).unwrap() {
+                if let Event::Key(key) = event::read().unwrap() {
+                    if key.code == KeyCode::Char('s') { 
+                        if sort_cpu {
+                            sort_cpu = !sort_cpu;
+                        } else {
+                            sort_cpu = !sort_cpu;
+                        }
+                    }
                 }
             }
 
@@ -77,14 +92,14 @@ fn main() {
             content_info.push(Parser::new(&VnMemory::new(&sys).raw_info()).cook());
             content_info.push(Parser::new(&VnDisk::new(&dsk).raw_info()).cook());
             content_info.push(Parser::new(&VnNetwork::new(&ntw).raw_info()).cook());
-            content_info.push(Parser::new(&VnProcess::new(&sys).raw_info()).cook());
+            content_info.push(Parser::new(&VnProcess::new(&sys).raw_info(sort_cpu)).cook());
             
             is_frame(content_info, terminal.width.clone(), terminal.height.clone()); // Sub Frames
             
             // Goes end of terminal for better view.
             terminal.goto_terminal_end();
             std::io::stdout().flush().unwrap();
-            thread::sleep(Duration::from_millis(700));
+            thread::sleep(Duration::from_millis(690));
         }
     });
     let _ = live.join();
