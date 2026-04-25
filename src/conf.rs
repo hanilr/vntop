@@ -222,3 +222,29 @@ pub fn is_keymap(ui: UI, frame: Frame, keymap_color: &str) {
     ui.goto(ui.height, 15);
     print!("{}", format!("{}", "<Sort Processes: 's'>".color(keymap_color.to_string()).on_color(frame.b_bg.clone())));
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn config() {
+        let mut conf = Conf::new("test_create", "txt", "foo\nbar");
+        conf.apply();
+        assert_eq!(conf.is_exist(), true);
+
+        let conf_content = conf.get();
+        assert_eq!(conf_content, "foo\nbar");
+        
+        fs::remove_file("conf/test_create.txt").expect("Test file not deleted.");
+    }
+
+    #[test]
+    fn parser() {
+        let pars = Parser::new("foo\nbar\nfoobar").cook();
+
+        assert_eq!(pars[0], "foo");
+        assert_eq!(pars[1], "bar");
+        assert_eq!(pars[2], "foobar");
+    }
+}

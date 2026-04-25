@@ -134,15 +134,9 @@ impl VnCpu {
         let code = "N/A".to_string();
 
         format!("{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}", 
-            core_names, 
-            core_usages, 
-            core_freqs, 
-            self.brand, 
-            self.vendor, 
-            self.logical, 
-            self.physical, 
-            self.total_usage, 
-            code
+            core_names, core_usages, core_freqs, 
+            self.brand, self.vendor, self.logical, 
+            self.physical, self.total_usage, code
         )
     }
 }
@@ -374,5 +368,101 @@ impl VnProcess {
         }
 
         lines.join("\n")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn system() {
+        let sys = VnSystem::new();
+        assert_ne!(sys.name, "");
+        assert_ne!(sys.host, "");
+        assert_ne!(sys.boot, "");
+        assert_ne!(sys.uptime, "");
+        assert_ne!(sys.arch, "");
+        assert_ne!(sys.os, "");
+        assert_ne!(sys.long_os, "");
+        assert_ne!(sys.kernel, "");
+        assert_ne!(sys.long_kernel, "");
+    }
+
+    #[test]
+    fn cpu() {
+        let sys = System::new_all();
+        let cpu = VnCpu::new(&sys);
+
+        assert_ne!(cpu.brand, "");
+        assert_ne!(cpu.vendor, "");
+        assert_ne!(cpu.logical, "");
+        assert_ne!(cpu.physical, "");
+        assert_ne!(cpu.total_usage, "");
+
+        for i in 0..cpu.core.len() {
+            assert_ne!(cpu.core[i].name, "");
+            assert_ne!(cpu.core[i].usage, "");
+            assert_ne!(cpu.core[i].freq, "");
+        }
+    }
+
+    #[test]
+    fn memory() {
+        let sys = System::new_all();
+        let mem = VnMemory::new(&sys);
+
+        assert_ne!(mem.total, "");
+        assert_ne!(mem.available, "");
+        assert_ne!(mem.used, "");
+        assert_ne!(mem.free, "");
+        assert_ne!(mem.total_swap, "");
+        assert_ne!(mem.used_swap, "");
+    }
+
+    #[test]
+    fn disks() {
+        let disks = Disks::new_with_refreshed_list();
+        let disk = VnDisk::new(&disks);
+
+        for i in 0..disk.disk_info.len() {
+            // While using windows there is no guarentee that C:/ drive has a label. 
+            //assert_ne!(disk.disk_info[i].name, ""); 
+
+            assert_ne!(disk.disk_info[i].mount, "");
+            assert_ne!(disk.disk_info[i].kind, "");
+            assert_ne!(disk.disk_info[i].file_type, "");
+            assert_ne!(disk.disk_info[i].total_space, "");
+            assert_ne!(disk.disk_info[i].available_space, "");
+        }
+    }
+
+    #[test]
+    fn networks() {
+        let network = Networks::new_with_refreshed_list();
+        let netw = VnNetwork::new(&network);
+
+        for i in 0..netw.network_info.len() {
+            assert_ne!(netw.network_info[i].name, "");
+            assert_ne!(netw.network_info[i].mac, "");
+            assert_ne!(netw.network_info[i].received, "");
+            assert_ne!(netw.network_info[i].transmitted, "");
+            assert_ne!(netw.network_info[i].total_received, "");
+            assert_ne!(netw.network_info[i].total_transmitted, "");
+        }
+    }
+
+    #[test]
+    fn processes() {
+        let sys = System::new_all();
+        let proc = VnProcess::new(&sys);
+
+        for i in 0..proc.process_info.len() {
+            assert_ne!(proc.process_info[i].name, "");
+            assert_ne!(proc.process_info[i].pid, "");
+            assert_ne!(proc.process_info[i].cpu_usage, "");
+            assert_ne!(proc.process_info[i].memory_usage.to_string(), "");
+            assert_ne!(proc.process_info[i].status, "");
+        }
     }
 }

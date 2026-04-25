@@ -9,9 +9,10 @@ This project is in early development. This roadmap contains features, bugs (if f
 - [X] Used and Available Sizes as KB: *For now this values used as bytes. Should be in kb.*
 - [X] Keybinds: *User actions.*
 - [X] Terminal Resize: *When terminal resized update visuals.*
-- [ ] Visual Indicators: *Usage percentage bars etc.*
+- [ ] Visual Indicators: *Usage percentage bars etc. Probably will add with ratatui*
 - [X] Processes visual update: *Should be processes widget more detailed and sorted.*
 - [ ] Use `ratatui` for UI: In long term ui should be change to ratatui.
+- [ ] Removable disks should shows in disks: *Live loop should display this information.*
 
 ---
 
@@ -32,7 +33,8 @@ This project is in early development. This roadmap contains features, bugs (if f
 
 ### Tests and Benchs
 
-- [ ] Make test and bench: *Tests and bench for making optimization easy.*
+- [X] Make test: *Tests for making optimization easy.*
+- [ ] Make bench: *For now bench only for nightly version of rust.*
 
 ---
 
