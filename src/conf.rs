@@ -13,7 +13,7 @@ pub const DEFAULT_CONFIGS: [(&str, &str, &str); 13] = [
         ("network_frame", "txt", "Networks\n┤\n├\n─\n│\n┌\n┐\n└\n┘\npurple\npurple\nblack\nblack\nblack"),
         ("process_frame", "txt", "Processes\n┤\n├\n─\n│\n┌\n┐\n└\n┘\nwhite\nwhite\nblack\nblack\nblack"),
         ("system_content", "txt", "Name\nHost\n1970\nUptime\nArch\nOS\nLong OS\nKernel\nLong Kernel\nblue\nwhite"),
-        ("cpu_content", "txt", "Name\nUsage\nFreq\nBrand\nVendor\nLogical\nPhysical\nTotal Usage\nCode\nred\nwhite"),
+        ("cpu_content", "txt", "Name\nUsage\nFreq\nBrand\nVendor\nLogical\nPhysical\nTotal Usage\nCore\nred\nwhite"),
         ("memory_content", "txt", "Total\nAvailable\nUsed\nFree\nTotal Swap\nUsed Swap\ngreen\nwhite"),
         ("disk_content", "txt", "Name\nMount\nKind\nFile Type\nTotal\nAvailable\nyellow\nwhite"),
         ("network_content", "txt", "Name\nMAC\nReceived\nTransmitted\nTotal Received\nTotal Transmitted\npurple\nwhite"),
