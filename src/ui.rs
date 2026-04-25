@@ -47,6 +47,10 @@ impl UI {
         gotoxy!(self.height, 0);
     }
 
+    pub fn goto(&self, pos_y: u8, pos_x: u8) {
+        gotoxy!(pos_y, pos_x);
+    }
+
     pub fn clean_terminal(&self) {
         clean!();
     }
