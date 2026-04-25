@@ -354,10 +354,7 @@ impl VnProcess {
         }
 });
 
-        let mut lines = vec![
-            format!("{:<8} │ {:<25} │ {:<8} │ {:<10} │ {:<10}", "PID", "Name", "CPU %", "Memory", "Status"),
-            "─".repeat(73)
-        ];
+        let mut lines = vec![];
 
         for p in sorted_procs.iter().take(100) {
             let short_name = if p.name.chars().count() > 25 {
@@ -372,7 +369,7 @@ impl VnProcess {
                 p.cpu_usage.clone()
             };
 
-            lines.push(format!("{:<8} │ {:<25} │ %{:<8} │ {:<10} │ {:<10}", 
+            lines.push(format!("{:<8} │ {:<25} │ %{:<8} │ {:<10} │ {:<10} │", 
                 p.pid, short_name, cpu_str, format_bytes(p.memory_usage), p.status));
         }
 
