@@ -37,32 +37,22 @@ fn main() {
             &win[10], &win[11], &win[12], &win[13]);
 
         window.draw(terminal.clone()); // Main Frame
+        is_keymap(terminal.clone(), window.clone(), "yellow"); // Keymap
 
         loop {
-            if event::poll(Duration::from_millis(100)).unwrap() {
-                if let Event::Key(key) = event::read().unwrap() {
-                    if key.code == KeyCode::Char('q') { break; }
-                }
-            }
-
-            if event::poll(Duration::from_millis(100)).unwrap() {
-                if let Event::Key(key) = event::read().unwrap() {
-                    if key.code == KeyCode::Char('s') { 
-                        if sort_cpu {
-                            sort_cpu = !sort_cpu;
-                        } else {
-                            sort_cpu = !sort_cpu;
-                        }
-                    }
-                }
-            }
-
-            if event::poll(Duration::from_millis(10)).unwrap() {
+            if event::poll(Duration::from_millis(33)).unwrap() {
                 let mut last_resize = None;
+            
                 while event::poll(Duration::from_secs(0)).unwrap() {
                     match event::read().unwrap() {
                         Event::Key(key) => {
-                            if key.code == KeyCode::Char('q') { return; }
+                            match key.code {
+                                KeyCode::Char('q') => return,
+                                KeyCode::Char('s') => {
+                                    sort_cpu = !sort_cpu;
+                                }
+                                _ => {}
+                            }
                         }
                         Event::Resize(nw, nh) => {
                             last_resize = Some((nw, nh));
@@ -76,6 +66,7 @@ fn main() {
                     terminal.height = new_height as u8;
                     terminal.clean_terminal();
                     window.draw(terminal.clone());
+                    is_keymap(terminal.clone(), window.clone(), "yellow");
                 }
             }
 
