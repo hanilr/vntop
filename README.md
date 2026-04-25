@@ -15,6 +15,11 @@ cd vntop
 cargo run
 ```
 
+You can test `sysinfo` crate usage and configuration system test.
+```bash
+cargo test
+```
+
 If you want to install this program to you system.
 ```bash
 cargo install vntop
@@ -27,8 +32,18 @@ cargo install vntop
 
 ---
 
-<img src="img/terminal.png" width="480" alt="Normal sized terminal.">
+<img src="img/terminal.png" width="480">
+
+> Normal terminal size.
 
 ---
 
-<img src="img/big_terminal.png" width="480" alt="Big sized terminal.">
+<img src="img/big_terminal.png" width="480">
+
+> Big terminal size.
+
+---
+
+<img src="img/terminal.gif" width="480">
+
+> Big terminal size gif.
