@@ -1,12 +1,10 @@
-use std::io::Write;
-use terminal_size::{terminal_size, Height, Width};
 use colored::*;
 
 // Loop print optimized macro.
 macro_rules! printf {
     ($($arg:tt)*) => {
         print!($($arg)*);
-        std::io::stdout().flush().unwrap();
+        //std::io::stdout().flush().unwrap();
     };
 }
 
@@ -42,24 +40,6 @@ impl UI {
             height: height,
             pos_x: pos_x,
             pos_y: pos_y,
-        }
-    }
-
-    pub fn new_with_terminal_size() -> UI {
-        let terminal = terminal_size();
-        let mut width: u8 = 0;
-        let mut height: u8 = 0;
-
-        if let Some((Width(w), Height(h))) = terminal {
-            width = w.try_into().unwrap_or(80);
-            height = h.try_into().unwrap_or(24);
-        }
-        
-        UI {
-            width: width,
-            height: height,
-            pos_x: 0,
-            pos_y: 0,
         }
     }
 
@@ -223,8 +203,9 @@ impl StatWidget {
                 printf!("{}", val.color(self.content_fg.clone()).on_color(self.content_bg.clone()));
             } else {
                 let name = self.names.get(i).unwrap_or(&String::new()).clone();
-                printf!("{}: {}", 
+                printf!("{}{}{}", 
                     name.color(self.names_fg.clone()).on_color(self.names_bg.clone()),
+                    ": ".color(self.names_fg.clone()).on_color(self.names_bg.clone()),
                     val.color(self.content_fg.clone()).on_color(self.content_bg.clone())
                 );
             }

@@ -5,10 +5,10 @@ This project is in early development. This roadmap contains features, bugs (if f
 
 ### User Interactions and Core Features
 
-- [ ] Live loop: *Refresh event.*
+- [X] Live loop: *Refresh event.*
 - [X] Used and Available Sizes as KB: *For now this values used as bytes. Should be in kb.*
-- [ ] Keybinds: *User actions.*
-- [ ] Terminal Resize: *When terminal resized update visuals.*
+- [X] Keybinds: *User actions.*
+- [X] Terminal Resize: *When terminal resized update visuals.*
 - [ ] Visual Indicators: *Usage percentage bars etc.*
 - [ ] Use `ratatui` for UI: In long term ui should be change to ratatui.
 
@@ -23,7 +23,7 @@ This project is in early development. This roadmap contains features, bugs (if f
 
 ### Optimization
 
-- [ ] Multitasking support: *Refresh event should be doing as multitasking.*
+- [X] Multitasking support: *Refresh event should be doing as multitasking.*
 - [ ] Configuration JSON files support: *Change `.txt` to `.json`.*
 - [ ] Memory allocation optimization: *Some of string types should be optimized.*
 

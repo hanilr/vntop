@@ -5,8 +5,11 @@ fn format_bytes(bytes: u64) -> String {
     let kb = 1024.0;
     let mb = kb * 1024.0;
     let gb = mb * 1024.0;
+    let tb = gb * 1024.0;
 
-    if bytes_f >= gb {
+    if bytes_f >= tb {
+        format!("{:.2} TB", bytes_f / tb)
+    } else if bytes_f >= gb {
         format!("{:.2} GB", bytes_f / gb)
     } else if bytes_f >= mb {
         format!("{:.2} MB", bytes_f / mb)
@@ -302,11 +305,9 @@ impl VnNetwork {
 // Contains a process informations.
 struct VnProcessInfo {
     name: String,
-    uid: String,
     pid: String,
     cpu_usage: String,
     memory_usage: String,
-    start_time: String,
     status: String,
 }
 
@@ -321,14 +322,10 @@ impl VnProcess {
 
         for (pid, process) in sys.processes() {
             let info = VnProcessInfo {
-                name: process.name().to_str().unwrap_or("Unknown Namme").to_string(),
-                uid: process.user_id()
-                    .map(|u| u.to_string())
-                    .unwrap_or_else(|| "N/A".to_string()),
+                name: process.name().to_str().unwrap_or("Unknown Name").to_string(),
                 pid: pid.as_u32().to_string(),
                 cpu_usage: format!("%{}", process.cpu_usage()),
                 memory_usage: format_bytes(process.memory()),
-                start_time: format_time(process.start_time()),
                 status: process.status().to_string(),
             };
             process_info.push(info)
@@ -367,8 +364,8 @@ impl VnProcess {
                 p.cpu_usage.clone()
             };
 
-            lines.push(format!("{:<8} | {:<8} | {:<25} | {:<8} | {:<10} | {:<10} | {:<8}", 
-                p.pid, p.uid, short_name, cpu_str, p.memory_usage, p.status, p.start_time));
+            lines.push(format!("{:<8} | {:<25} | {:<8} | {:<10} | {:<10}", 
+                p.pid, short_name, cpu_str, p.memory_usage, p.status));
         }
 
         lines.join("\n")
