@@ -1,6 +1,8 @@
 use std::fs::{self, File};
 use std::io::Write;
 use std::path::Path;
+use colored::*;
+
 use crate::ui::*;
 
 // Informations of frames and contents.
@@ -212,4 +214,11 @@ pub fn is_frame(content_info: Vec<Vec<String>>, term_w: u8, term_h: u8) {
         );
         widget.draw();
     }
+}
+
+pub fn is_keymap(ui: UI, frame: Frame, keymap_color: &str) {
+    ui.goto(ui.height, 3);
+    print!("{}", format!("{}", "<Quit: 'q'>".color(keymap_color.to_string()).on_color(frame.b_bg.clone())));
+    ui.goto(ui.height, 15);
+    print!("{}", format!("{}", "<Sort Processes: 's'>".color(keymap_color.to_string()).on_color(frame.b_bg.clone())));
 }
