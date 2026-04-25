@@ -2,17 +2,22 @@
 > Release notes contain every version update changes.
 
 - [Release Notes: Variation Table of Processes](#release-notes-variation-table-of-processes)
-    - [v0.1.2 (Visuals) \[Nightly\]](#v012-visuals-nightly)
+    - [v0.1.2 (Visuals)](#v012-visuals)
     - [v0.1.1 (Live Loop)](#v011-live-loop)
     - [v0.1.0 (Basics)](#v010-basics)
 
 ---
 
-### v0.1.2 (Visuals) [Nightly]
+### v0.1.2 (Visuals)
 
 - Release notes add. 
 - Roadmap update.
 - Process sorting and processes widget visual update.
+- Keymap add.
+- `goto` add to UI.
+- `cargo test` add.
+- Key and resize event optimization.
+- `/img` update.
 
 ---
 
