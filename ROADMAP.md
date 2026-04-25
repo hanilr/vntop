@@ -10,13 +10,14 @@ This project is in early development. This roadmap contains features, bugs (if f
 - [X] Keybinds: *User actions.*
 - [X] Terminal Resize: *When terminal resized update visuals.*
 - [ ] Visual Indicators: *Usage percentage bars etc.*
+- [X] Processes visual update: *Should be processes widget more detailed and sorted.*
 - [ ] Use `ratatui` for UI: In long term ui should be change to ratatui.
 
 ---
 
 ### Data Sorting and Searching
 
-- [ ] Process Sorting: *Cpu, memory etc. usage.*
+- [X] Process Sorting: *Cpu, memory etc. usage.*
 - [ ] Process Searching: *User activity*
 
 ---
@@ -26,6 +27,12 @@ This project is in early development. This roadmap contains features, bugs (if f
 - [X] Multitasking support: *Refresh event should be doing as multitasking.*
 - [ ] Configuration JSON files support: *Change `.txt` to `.json`.*
 - [ ] Memory allocation optimization: *Some of string types should be optimized.*
+
+---
+
+### Tests and Benchs
+
+- [ ] Make test and bench: *Tests and bench for making optimization easy.*
 
 ---
 
