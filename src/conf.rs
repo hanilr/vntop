@@ -216,11 +216,32 @@ pub fn is_frame(content_info: Vec<Vec<String>>, term_w: u8, term_h: u8) {
     }
 }
 
-pub fn is_keymap(ui: UI, frame: Frame, keymap_color: &str) {
-    ui.goto(ui.height, 3);
-    print!("{}", format!("{}", "<Quit: 'q'>".color(keymap_color.to_string()).on_color(frame.b_bg.clone())));
-    ui.goto(ui.height, 15);
-    print!("{}", format!("{}", "<Sort Processes: 's'>".color(keymap_color.to_string()).on_color(frame.b_bg.clone())));
+pub fn is_keymap(ui: UI, frame: Frame, keymap_color: &str, sort_cpu: bool) {
+    let keymap = [
+        ("<Quit: 'q'>"),
+        ("<Sort as CPU: 'F1'>"),
+        ("<Sort as Memory: 'F1'>"),
+        ("<Search Process: 'F2'>"),
+    ];
+
+    let mut pos_x = 3;
+    let mut i = 0;
+
+    while i < keymap.len() {
+        ui.goto(ui.height, pos_x);
+        pos_x += keymap[i].len() as u8 + 1;
+        
+        if (sort_cpu && i == 1) || (sort_cpu && i == 2) {
+            print!("{}", keymap[1].color(keymap_color).on_color(frame.b_bg.clone()));
+            if i == 1 { i += 1; }
+        } else if (!sort_cpu && i == 1) || (!sort_cpu && i == 2) {
+            print!("{}", keymap[2].color(keymap_color).on_color(frame.b_bg.clone()));
+            if i == 1 { i += 1; }
+        } else {
+            print!("{}", keymap[i].color(keymap_color).on_color(frame.b_bg.clone()));
+        }
+        i += 1;
+    }
 }
 
 #[cfg(test)]
