@@ -37,7 +37,7 @@ fn main() {
             &win[10], &win[11], &win[12], &win[13]);
 
         window.draw(terminal.clone()); // Main Frame
-        is_keymap(terminal.clone(), window.clone(), "yellow"); // Keymap
+        is_keymap(terminal.clone(), window.clone(), "yellow", sort_cpu); // Keymap
 
         loop {
             if event::poll(Duration::from_millis(50)).unwrap() {
@@ -50,6 +50,8 @@ fn main() {
                                 KeyCode::Char('q') => return,
                                 KeyCode::F(1) => {
                                     sort_cpu = !sort_cpu;
+                                    window.draw(terminal.clone());
+                                    is_keymap(terminal.clone(), window.clone(), "yellow", sort_cpu); // Keymap
                                 }
                                 KeyCode::F(2) => {
                                     // Process Search
@@ -67,7 +69,7 @@ fn main() {
                     terminal.height = new_height as u8;
                     terminal.clean_terminal();
                     window.draw(terminal.clone());
-                    is_keymap(terminal.clone(), window.clone(), "yellow");
+                    is_keymap(terminal.clone(), window.clone(), "yellow", sort_cpu);
                 }
             }
 

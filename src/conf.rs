@@ -229,15 +229,22 @@ pub fn is_keymap(ui: UI, frame: Frame, keymap_color: &str, sort_cpu: bool) {
 
     while i < keymap.len() {
         ui.goto(ui.height, pos_x);
-        pos_x += keymap[i].len() as u8 + 1;
         
         if (sort_cpu && i == 1) || (sort_cpu && i == 2) {
-            print!("{}", keymap[1].color(keymap_color).on_color(frame.b_bg.clone()));
-            if i == 1 { i += 1; }
-        } else if (!sort_cpu && i == 1) || (!sort_cpu && i == 2) {
             print!("{}", keymap[2].color(keymap_color).on_color(frame.b_bg.clone()));
-            if i == 1 { i += 1; }
+            if i == 1 {
+                pos_x += keymap[2].len() as u8 + 1; 
+                i += 1;
+            } else { pos_x += keymap[2].len() as u8 + 1;  }
+        } else if (!sort_cpu && i == 1) || (!sort_cpu && i == 2) {
+            print!("{}", keymap[1].color(keymap_color).on_color(frame.b_bg.clone()));
+
+            if i == 1 {
+                pos_x += keymap[1].len() as u8 + 1; 
+                i += 1;
+            } else { pos_x += keymap[1].len() as u8 + 1;  }
         } else {
+            pos_x += keymap[i].len() as u8 + 1;
             print!("{}", keymap[i].color(keymap_color).on_color(frame.b_bg.clone()));
         }
         i += 1;
