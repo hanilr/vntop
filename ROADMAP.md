@@ -12,7 +12,7 @@ This project is in early development. This roadmap contains features, bugs (if f
 - [ ] Visual Indicators: *Usage percentage bars etc. Probably will add with ratatui*
 - [X] Processes visual update: *Should be processes widget more detailed and sorted.*
 - [ ] Use `ratatui` for UI: In long term ui should be change to ratatui.
-- [ ] Removable disks should shows in disks: *Live loop should display this information.*
+- [X] Removable disks should shows in disks: *Live loop should display this information.*
 
 ---
 

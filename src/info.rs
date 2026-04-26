@@ -195,8 +195,16 @@ impl VnDisk {
         let mut disk_info = vec![];
 
         for d in disks.list() {
+            let mut is_removable: String = d.name().to_str().unwrap_or("Unknown Name").to_string();
+
+            if d.is_removable() {
+                is_removable = format!("Ext: {}", is_removable);
+            } else if is_removable == "".to_string() {
+                is_removable = "No Label".to_string();
+            }
+
             let info = VnDiskInfo {
-                name: d.name().to_str().unwrap_or("Unknown Name").to_string(),
+                name: is_removable,
                 mount: d.mount_point().to_str().unwrap_or("Unknown Mount").to_string(),
                 kind: d.kind().to_string(),
                 file_type: d.file_system().to_str().unwrap_or("Unknown File System").to_string(),
