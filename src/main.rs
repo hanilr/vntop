@@ -9,7 +9,7 @@ use vntop::ui::*;
 use sysinfo::{System, Disks, Networks};
 use crossterm::terminal::{disable_raw_mode, enable_raw_mode};
 use crossterm::terminal;
-use crossterm::event::{self, Event, KeyCode};
+use crossterm::event::{self, Event, KeyCode, KeyEventKind};
  
 fn main() {
     // Checks if configuration files exist or not.
@@ -40,24 +40,25 @@ fn main() {
         is_keymap(terminal.clone(), window.clone(), "yellow"); // Keymap
 
         loop {
-            if event::poll(Duration::from_millis(33)).unwrap() {
+            if event::poll(Duration::from_millis(50)).unwrap() {
                 let mut last_resize = None;
-            
+                        
                 while event::poll(Duration::from_secs(0)).unwrap() {
-                    match event::read().unwrap() {
-                        Event::Key(key) => {
+                    if let Event::Key(key) = event::read().unwrap() {
+                        if key.kind == KeyEventKind::Press {
                             match key.code {
                                 KeyCode::Char('q') => return,
-                                KeyCode::Char('s') => {
+                                KeyCode::F(1) => {
                                     sort_cpu = !sort_cpu;
+                                }
+                                KeyCode::F(2) => {
+                                    // Process Search
                                 }
                                 _ => {}
                             }
                         }
-                        Event::Resize(nw, nh) => {
-                            last_resize = Some((nw, nh));
-                        }
-                        _ => {}
+                    } else if let Event::Resize(nw, nh) = event::read().unwrap() {
+                        last_resize = Some((nw, nh));
                     }
                 }
             
@@ -90,7 +91,7 @@ fn main() {
             // Goes end of terminal for better view.
             terminal.goto_terminal_end();
             std::io::stdout().flush().unwrap();
-            thread::sleep(Duration::from_millis(690));
+            thread::sleep(Duration::from_millis(850));
         }
     });
     let _ = live.join();
