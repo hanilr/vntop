@@ -7,7 +7,7 @@ description = "Table of Processes tool written in Rust."
 license = "MIT"
 repository = "https://github.com/hanilr/vntop"
 readme = "README.md"
-keywords = ["tui", "system-monitor", "cli", "linux", "windows", "macos"]
+keywords = ["tui", "system-monitor", "cli", "unix", "windows"]
 categories = ["command-line-utilities"]
 
 [dependencies]
