@@ -353,8 +353,7 @@ impl VnProcess {
             let a_val = a.memory_usage;
             let b_val = b.memory_usage;
             b_val.partial_cmp(&a_val).unwrap_or(std::cmp::Ordering::Equal)
-        }
-});
+        }});
 
         let mut lines = vec![];
 
@@ -434,9 +433,7 @@ mod tests {
         let disk = VnDisk::new(&disks);
 
         for i in 0..disk.disk_info.len() {
-            // While using windows there is no guarentee that C:/ drive has a label. 
-            //assert_ne!(disk.disk_info[i].name, ""); 
-
+            assert_ne!(disk.disk_info[i].name, ""); 
             assert_ne!(disk.disk_info[i].mount, "");
             assert_ne!(disk.disk_info[i].kind, "");
             assert_ne!(disk.disk_info[i].file_type, "");
