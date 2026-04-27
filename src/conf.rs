@@ -1,5 +1,6 @@
 use std::fs::{self, File};
 use std::io::Write;
+use std::io;
 use std::path::Path;
 use colored::*;
 
@@ -219,6 +220,7 @@ pub fn is_frame(content_info: Vec<Vec<String>>, term_w: u8, term_h: u8) {
 pub fn is_keymap(ui: UI, frame: Frame, keymap_color: &str, sort_cpu: bool) {
     let keymap = [
         ("<Quit: 'q'>"),
+        ("<Kill: 'k'>"),
         ("<Sort as CPU: 'F1'>"),
         ("<Sort as Memory: 'F1'>"),
         ("<Search Process: 'F2'>"),
@@ -230,25 +232,38 @@ pub fn is_keymap(ui: UI, frame: Frame, keymap_color: &str, sort_cpu: bool) {
     while i < keymap.len() {
         ui.goto(ui.height, pos_x);
         
-        if (sort_cpu && i == 1) || (sort_cpu && i == 2) {
+        if (sort_cpu && i == 2) || (sort_cpu && i == 3) {
+            print!("{}", keymap[3].color(keymap_color).on_color(frame.b_bg.clone()));
+            if i == 2 {
+                pos_x += keymap[3].len() as u8 + 1; 
+                i += 1;
+            } else { pos_x += keymap[3].len() as u8 + 1;  }
+        } else if (!sort_cpu && i == 2) || (!sort_cpu && i == 3) {
             print!("{}", keymap[2].color(keymap_color).on_color(frame.b_bg.clone()));
-            if i == 1 {
+
+            if i == 2 {
                 pos_x += keymap[2].len() as u8 + 1; 
                 i += 1;
             } else { pos_x += keymap[2].len() as u8 + 1;  }
-        } else if (!sort_cpu && i == 1) || (!sort_cpu && i == 2) {
-            print!("{}", keymap[1].color(keymap_color).on_color(frame.b_bg.clone()));
-
-            if i == 1 {
-                pos_x += keymap[1].len() as u8 + 1; 
-                i += 1;
-            } else { pos_x += keymap[1].len() as u8 + 1;  }
         } else {
             pos_x += keymap[i].len() as u8 + 1;
             print!("{}", keymap[i].color(keymap_color).on_color(frame.b_bg.clone()));
         }
         i += 1;
     }
+}
+
+pub fn is_command(terminal: UI, window: Frame) -> String {
+    let pre_frame = format!("{} > {} {}", window.ld_sym, " ".repeat(terminal.width.clone() as usize - 6), window.rd_sym);
+    terminal.goto(terminal.height, 0);
+                                    
+    print!("{}", pre_frame.color(window.v_fg.clone()).on_color(window.v_bg.clone()));
+    terminal.goto(terminal.height, 5);
+    io::stdout().flush().unwrap();
+    
+    let mut input = String::new();
+    io::stdin().read_line(&mut input).expect("Read line error.");
+    input
 }
 
 #[cfg(test)]
