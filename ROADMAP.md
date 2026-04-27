@@ -19,7 +19,7 @@ This project is in early development. This roadmap contains features, bugs (if f
 ### Data Sorting and Searching
 
 - [X] Process Sorting: *Cpu, memory etc. usage.*
-- [ ] Process Searching: *User activity*
+- [X] Process Searching: *User activity*
 
 ---
 

@@ -2,11 +2,21 @@
 > Release notes contain every version update changes.
 
 - [Release Notes: Variation Table of Processes](#release-notes-variation-table-of-processes)
+    - [v0.1.3 (Processes)](#v013-processes)
     - [v0.1.2 (Visuals)](#v012-visuals)
     - [v0.1.1 (Live Loop)](#v011-live-loop)
     - [v0.1.0 (Basics)](#v010-basics)
 
 ---
+
+### v0.1.3 (Processes)
+
+- Removable disks will be shown as `[Ext 'label']`.
+- Empty disk name fix. If there is no label will be shown as 'No Label'.
+- Keymap switched to function keys.
+- `is_keymap` algorithm update.
+- Process kill add.
+- Process search add.
 
 ### v0.1.2 (Visuals)
 

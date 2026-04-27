@@ -10,7 +10,7 @@ use sysinfo::{System, Disks, Networks};
 use crossterm::terminal::{disable_raw_mode, enable_raw_mode};
 use crossterm::terminal;
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
- 
+
 fn main() {
     // Checks if configuration files exist or not.
     // If not then creates and writes.
@@ -25,6 +25,10 @@ fn main() {
 
         // Process sorting variable.
         let mut sort_cpu = true;
+
+        // Process search variable.
+        let mut target_content: String = "".to_string();
+        let mut target_input: String = "".to_string();
 
         // Get terminal preferences and draw main frame.
         let (width, height) = terminal::size().unwrap_or((80, 24));
@@ -48,13 +52,35 @@ fn main() {
                         if key.kind == KeyEventKind::Press {
                             match key.code {
                                 KeyCode::Char('q') => return,
+                                KeyCode::Char('k') => {
+                                    disable_raw_mode().unwrap();  
+                                    let input = is_command(terminal.clone(), window.clone());
+                                    enable_raw_mode().expect("Terminal raw mode issue.");
+
+                                    if input.trim() == "q" || input.trim() == "quit" {
+                                        continue;
+                                    } else {
+                                        if let Some(process) = sys.process(sysinfo::Pid::from(input.trim().parse::<usize>().expect("Kill error."))) { process.kill(); }
+                                    }
+                                },
                                 KeyCode::F(1) => {
                                     sort_cpu = !sort_cpu;
                                     window.draw(terminal.clone());
                                     is_keymap(terminal.clone(), window.clone(), "yellow", sort_cpu); // Keymap
                                 }
                                 KeyCode::F(2) => {
-                                    // Process Search
+                                    if !target_content.is_empty() {
+                                        target_content.clear();
+                                        target_input.clear();
+                                        continue;
+                                    } else {
+                                        disable_raw_mode().unwrap();  
+                                        let input = is_command(terminal.clone(), window.clone());
+                                        enable_raw_mode().expect("Terminal raw mode issue.");
+
+                                        target_content = VnProcess::new(&sys).get_process(input.trim().to_string());
+                                        target_input = input;
+                                    }
                                 }
                                 _ => {}
                             }
@@ -67,6 +93,7 @@ fn main() {
                 if let Some((new_width, new_height)) = last_resize {
                     terminal.width = new_width as u8;
                     terminal.height = new_height as u8;
+                    
                     terminal.clean_terminal();
                     window.draw(terminal.clone());
                     is_keymap(terminal.clone(), window.clone(), "yellow", sort_cpu);
@@ -80,14 +107,21 @@ fn main() {
             dsk.refresh(false);
             ntw.refresh(false);
             
+            // If process searching happening
+            if !target_content.is_empty() {
+                target_content = VnProcess::new(&sys).get_process(target_input.trim().to_string());
+            }
+
             let mut content_info: Vec<Vec<String>> = vec![];
             content_info.push(Parser::new(&VnSystem::new().raw_info()).cook());
             content_info.push(Parser::new(&VnCpu::new(&sys).raw_info()).cook());
             content_info.push(Parser::new(&VnMemory::new(&sys).raw_info()).cook());
             content_info.push(Parser::new(&VnDisk::new(&dsk).raw_info()).cook());
             content_info.push(Parser::new(&VnNetwork::new(&ntw).raw_info()).cook());
-            content_info.push(Parser::new(&VnProcess::new(&sys).raw_info(sort_cpu)).cook());
+            content_info.push(Parser::new(&VnProcess::new(&sys).raw_info(sort_cpu, target_content.clone())).cook());
             
+            window.draw(terminal.clone()); // Main Frame
+            is_keymap(terminal.clone(), window.clone(), "yellow", sort_cpu); // Keymap
             is_frame(content_info, terminal.width.clone(), terminal.height.clone()); // Sub Frames
             
             // Goes end of terminal for better view.

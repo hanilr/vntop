@@ -71,14 +71,14 @@ pub struct Frame {
     // Left Upper, Right Upper, Left Down and Right Down Symbols
     lu_sym: String,
     ru_sym: String,
-    ld_sym: String,
-    rd_sym: String,
+    pub ld_sym: String,
+    pub rd_sym: String,
 
     // Horizontal and Vertical Foreground and Background Colors
     h_fg: String,
-    v_fg: String,
+    pub v_fg: String,
     h_bg: String,
-    v_bg: String,
+    pub v_bg: String,
 
     // Background Color
     pub b_bg: String,
