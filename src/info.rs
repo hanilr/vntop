@@ -1,5 +1,7 @@
 use sysinfo::{System, Disks, Networks};
 
+use crate::conf::Parser;
+
 fn format_bytes(bytes: u64) -> String {
     let bytes_f = bytes as f64;
     let kb = 1024.0;
@@ -338,7 +340,7 @@ impl VnProcess {
         *self = new;
     }
 
-    pub fn raw_info(&self, sort_cpu: bool) -> String {
+    pub fn raw_info(&self, sort_cpu: bool, target_info: String) -> String {
         if self.process_info.is_empty() {
             return "N/A".to_string();
         }
@@ -356,6 +358,11 @@ impl VnProcess {
         }});
 
         let mut lines = vec![];
+        if target_info != "" { 
+            let cook_target = Parser::new(&target_info).cook();
+            lines.push(format!("{:<8} │ {:<25} │ %{:<10} │ {:<10} │ {:<10} │",
+                cook_target[2], cook_target[1], cook_target[3], cook_target[4], cook_target[5]));
+        }
 
         for p in sorted_procs.iter().take(100) {
             let short_name = if p.name.chars().count() > 25 {
@@ -370,11 +377,39 @@ impl VnProcess {
                 p.cpu_usage.clone()
             };
 
-            lines.push(format!("{:<8} │ {:<25} │ %{:<8} │ {:<10} │ {:<10} │", 
+            lines.push(format!("{:<8} │ {:<25} │ %{:<10} │ {:<10} │ {:<10} │", 
                 p.pid, short_name, cpu_str, format_bytes(p.memory_usage), p.status));
         }
 
         lines.join("\n")
+    }
+
+    pub fn get_process(&self, name: String) -> String {
+        let mut pid_info: Vec<String> = vec![];
+        let mut is_name: bool = false;
+
+        for i in 0..self.process_info.len() {
+            if self.process_info[i].name.to_lowercase().contains(&name.to_lowercase()) {
+                pid_info.push("|".to_string());
+                pid_info.push(self.process_info[i].name.clone());
+                pid_info.push(self.process_info[i].pid.clone());
+                pid_info.push(self.process_info[i].cpu_usage.clone());
+                pid_info.push(self.process_info[i].memory_usage.clone().to_string());
+                pid_info.push(self.process_info[i].status.clone());
+                
+                is_name = true;
+                break;
+            } else {
+                is_name = false;
+            }
+        }
+
+        if is_name {
+            format!("{}\n{}\n{}\n{}\n{}\n{}", pid_info[0], pid_info[1], 
+                pid_info[2], pid_info[3], pid_info[4], pid_info[5]) as String
+        } else {
+            "".to_string()
+        }
     }
 }
 
